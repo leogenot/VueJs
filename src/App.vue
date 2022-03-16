@@ -57,11 +57,11 @@ export default {
      window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     }); 
+    /* this.addBeer();
     this.addBeer();
     this.addBeer();
     this.addBeer();
-    this.addBeer();
-    this.addBeer();
+    this.addBeer(); */
   },
     computed: {
     beersOrganizationData() {
@@ -110,4 +110,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
