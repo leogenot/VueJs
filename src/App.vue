@@ -46,22 +46,22 @@ export default {
       beersSortType: "AZName",
     };
   },
-  watch: {
+  /* watch: {
     bottom(newValue) {
       if (newValue) {
         this.addBeer();
       }
     },
-  }, 
+  }, */
   created() {
-     window.addEventListener("scroll", () => {
+    /* window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
-    }); 
-    /* this.addBeer();
+    }); */
     this.addBeer();
     this.addBeer();
     this.addBeer();
-    this.addBeer(); */
+    this.addBeer();
+    this.addBeer();
   },
     computed: {
     beersOrganizationData() {
@@ -99,9 +99,9 @@ export default {
           food: api.food_pairing,
         };
         this.beers.push(apiInfo);
-         if (this.bottomVisible()) {
+        /* if (this.bottomVisible()) {
           this.addBeer();
-        } 
+        } */
       });
       
     },
@@ -110,5 +110,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
