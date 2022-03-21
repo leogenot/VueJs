@@ -13,7 +13,6 @@
           <option value="ZAName">Sort from Z to A</option>
         </select>
       </div>
-      <h1>List of all beers</h1>
       <div v-if="!beers.length" class="loading">Loading...</div>
       <BeerCard
         v-for="beer in beersOrganizationData"
