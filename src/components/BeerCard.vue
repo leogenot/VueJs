@@ -32,7 +32,7 @@ export default {
     tagline: String,
     desc: String,
     tips: String,
-    food: Object,
+    food: Array,
 	},
   
 };
@@ -42,15 +42,6 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Old+Standard+TT:400i,700|Open+Sans:400,400i");
 
 
-.container {
-  position: relative;
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-}
 
 .beer-card {
   position: relative;
@@ -122,9 +113,7 @@ export default {
   }
 }
 @media all and (max-width: 790px) {
-  .container {
-    min-height: auto;
-  }
+
 
   .beer-card {
     min-height: 80vh;

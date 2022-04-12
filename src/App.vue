@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <section>
-      <Navbar/>
+      <Navbar />
       <div class="list-options">
         <input type="text" v-model="search" placeholder="Type a beer name" />
         <label for="beer-sort">Sort by : </label>
@@ -13,21 +13,33 @@
         </select>
       </div>
       <div v-if="!beers.length" class="loading">Loading...</div>
-      <BeerCard
-        v-for="beer in beersOrganizationData"
-        :key="beer"
-        :name="beer.name"
-        :img="beer.img"
-        :abv="beer.abv"
-        :tagline="beer.tagline"
-        :desc="beer.desc"
-        :tips="beer.tips"
-        :food="beer.food"
-      />
+      <div class="beer">
+        <BeerCard
+          v-for="beer in beersOrganizationData"
+          :key="beer.id"
+          :name="beer.name"
+          :img="beer.img"
+          :abv="beer.abv"
+          :tagline="beer.tagline"
+          :desc="beer.desc"
+          :tips="beer.tips"
+          :food="beer.food"
+        />
+      </div>
     </section>
   </div>
 </template>
-
+<style>
+.beer {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 <script>
 import BeerCard from "./components/BeerCard.vue";
 import Navbar from "./components/Navbar.vue";
@@ -46,22 +58,22 @@ export default {
       beersSortType: "AZName",
     };
   },
-   watch: {
+  watch: {
     bottom(newValue) {
       if (newValue) {
         this.addBeer();
       }
     },
-  }, 
+  },
   created() {
-     /* window.addEventListener("scroll", () => {
+    /* window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     }); */
     this.addBeer();
     this.addBeer();
     this.addBeer();
     this.addBeer();
-    this.addBeer(); 
+    this.addBeer();
   },
   computed: {
     beersOrganizationData() {
@@ -71,7 +83,7 @@ export default {
       const reversed = ["ZAName", "MinusABV"].includes(this.beersSortType);
       const filterFunc = (a) =>
         a.name.toLowerCase().includes(this.search.toLowerCase());
-      let comparator = undefined
+      let comparator = undefined;
       if (field == "name") {
         comparator = (a, b) => a.name.localeCompare(b.name);
       } else if (field == "abv") {
@@ -85,14 +97,13 @@ export default {
     },
   },
   methods: {
-    
-    bottomVisible() {
+/*     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
       const pageHeight = document.documentElement.scrollHeight;
       const bottomOfPage = visible + scrollY >= pageHeight;
       return bottomOfPage || pageHeight < visible;
-    }, 
+    }, */
     addBeer() {
       axios.get("https://api.punkapi.com/v2/beers/random").then((response) => {
         let api = response.data[0];
@@ -106,9 +117,9 @@ export default {
           food: api.food_pairing,
         };
         this.beers.push(apiInfo);
-          if (this.bottomVisible()) {
+/*         if (this.bottomVisible()) {
           this.addBeer();
-        }  
+        } */
       });
     },
   },
