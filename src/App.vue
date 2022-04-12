@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <section>
+      <Navbar/>
       <div class="list-options">
         <input type="text" v-model="search" placeholder="Type a beer name" />
         <label for="beer-sort">Sort by : </label>
@@ -29,11 +30,13 @@
 
 <script>
 import BeerCard from "./components/BeerCard.vue";
+import Navbar from "./components/Navbar.vue";
 import axios from "axios";
 export default {
   name: "BeerGallery",
   components: {
     BeerCard,
+    Navbar,
   },
   data() {
     return {
@@ -43,22 +46,22 @@ export default {
       beersSortType: "AZName",
     };
   },
-  /* watch: {
+   watch: {
     bottom(newValue) {
       if (newValue) {
         this.addBeer();
       }
     },
-  }, */
+  }, 
   created() {
-    /* window.addEventListener("scroll", () => {
+     /* window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     }); */
     this.addBeer();
     this.addBeer();
     this.addBeer();
     this.addBeer();
-    this.addBeer();
+    this.addBeer(); 
   },
   computed: {
     beersOrganizationData() {
@@ -82,14 +85,14 @@ export default {
     },
   },
   methods: {
-    /*
+    
     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
       const pageHeight = document.documentElement.scrollHeight;
       const bottomOfPage = visible + scrollY >= pageHeight;
       return bottomOfPage || pageHeight < visible;
-    }, */
+    }, 
     addBeer() {
       axios.get("https://api.punkapi.com/v2/beers/random").then((response) => {
         let api = response.data[0];
@@ -103,9 +106,9 @@ export default {
           food: api.food_pairing,
         };
         this.beers.push(apiInfo);
-        /* if (this.bottomVisible()) {
+          if (this.bottomVisible()) {
           this.addBeer();
-        } */
+        }  
       });
     },
   },
