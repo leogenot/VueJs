@@ -27,6 +27,12 @@
         />
       </div>
     </section>
+    <PaginationComp
+      :totalPages="10"
+      :perPage="10"
+      :currentPage="currentPage"
+      @pagechanged="onPageChange"
+    />
   </div>
 </template>
 <style>
@@ -42,12 +48,14 @@
 </style>
 <script>
 import BeerCard from "./components/BeerCard.vue";
+import PaginationComp from './components/PaginationComp.vue'
 //import Favorite from "./components/favorite.vue";
 import axios from "axios";
 export default {
   name: "BeerGallery",
   components: {
     BeerCard,
+    PaginationComp,
     //Favorite,
   },
   data() {
@@ -56,6 +64,7 @@ export default {
       beers: [],
       search: "",
       beersSortType: "AZName",
+      currentPage: 1,
     };
   },
   watch: {
@@ -122,6 +131,10 @@ export default {
           this.addBeer();
         } */
       });
+    },
+    onPageChange(page) {
+      console.log(page)
+      this.currentPage = page;
     },
     /*     favorite: function() {
             if (this.disabled==true) {

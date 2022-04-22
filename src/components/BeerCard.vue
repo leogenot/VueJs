@@ -31,9 +31,11 @@
         <tr>
           <th>{{ tagline }}</th>
         </tr>
+        <br>
         <tr>
           <td>{{ desc }}</td>
         </tr>
+        <br>
         <tr>
           <th>Food pairings</th>
         </tr>
@@ -53,13 +55,14 @@
 </template>
 <script src="https://code.jquery.com/jquery-3.1.0.js"></script>  
 <script>
-/* var $div = $('.contents');
+var $div = $('.contents');
 $div.on('mousewheel DOMMouseScroll', function(e) {
     var d = e.originalEvent.wheelDelta || -e.originalEvent.detail,
         dir = d > 0 ? 'up' : 'down',
         stop = (dir == 'up' && this.scrollTop == 0) || (dir == 'down' && this.scrollTop == this.scrollHeight-this.offsetHeight);
     stop && e.preventDefault();
-}); */
+    console.log("hello")
+});
 
 
 export default {
@@ -229,7 +232,7 @@ export default {
   right: -70px;
   border-radius: 0px 0px 200px 200px;
   transition: all 0.5s, border-radius 2s, top 1s;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 .wrapper .inside .icon {
   position: absolute;
