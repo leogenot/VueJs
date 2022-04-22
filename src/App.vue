@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <section>
-      <Navbar />
       <div class="list-options">
         <input type="text" v-model="search" placeholder="Type a beer name" />
         <label for="beer-sort">Sort by : </label>
@@ -11,6 +10,7 @@
           <option value="PlusABV">Sort from least alcohol</option>
           <option value="MinusABV">Sort from most alcohol</option>
         </select>
+        <favorite name="favorite"></favorite>
       </div>
       <div v-if="!beers.length" class="loading">Loading...</div>
       <div class="beer">
@@ -31,24 +31,24 @@
 </template>
 <style>
 .beer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+  grid-auto-rows: auto;
+  grid-gap: 1rem;
   position: relative;
   min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
 }
 </style>
 <script>
 import BeerCard from "./components/BeerCard.vue";
-import Navbar from "./components/Navbar.vue";
+//import Favorite from "./components/favorite.vue";
 import axios from "axios";
 export default {
   name: "BeerGallery",
   components: {
     BeerCard,
-    Navbar,
+    //Favorite,
   },
   data() {
     return {
@@ -69,6 +69,7 @@ export default {
     /* window.addEventListener("scroll", () => {
       this.bottom = this.bottomVisible();
     }); */
+    this.addBeer();
     this.addBeer();
     this.addBeer();
     this.addBeer();
@@ -97,7 +98,7 @@ export default {
     },
   },
   methods: {
-/*     bottomVisible() {
+    /*     bottomVisible() {
       const scrollY = window.scrollY;
       const visible = document.documentElement.clientHeight;
       const pageHeight = document.documentElement.scrollHeight;
@@ -117,11 +118,17 @@ export default {
           food: api.food_pairing,
         };
         this.beers.push(apiInfo);
-/*         if (this.bottomVisible()) {
+        /*         if (this.bottomVisible()) {
           this.addBeer();
         } */
       });
     },
+    /*     favorite: function() {
+            if (this.disabled==true) {
+                return;
+            }
+            this.value = !this.value;
+        }, */
   },
 };
 </script>

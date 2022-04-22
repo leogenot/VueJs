@@ -1,28 +1,67 @@
 <template>
-  <div class="beer-card">
 
 
-
-      <div class="beer-img">
-        <img :src="img" height="350" />
+<div class="wrapper">
+  <div class="container">
+    <div class="beer-img top">
+        <img :src="img" height="300" class="beer-image"/>
       </div>
-      <div class="beer-info">
-        <h2>{{ name }} {{ abv }}%</h2>
-        <p class="bright">{{ tagline }}</p>
-        <p><span class="bright">Description:</span> {{ desc }}</p>
-        <p><span class="bright">Tips:</span> {{ tips }}</p>
-        <h3 class="bright">Food Pairings</h3>
-        <ul>
+    <div class="bottom">
+      <div class="left">
+        <div class="details">
+          <h1>{{ name }}</h1>
+          <p>{{ abv }}%</p>
+        </div>
+        <div class="buy"><i onclick="myFunction(this)" class="material-icons">favorite_border</i></div>
+      </div>
+      <div class="right">
+        <div class="done"><i class="material-icons">done</i></div>
+        <div class="details">
+          <h1>{{ name }}</h1>
+          <p>Added to your favorites</p>
+        </div>
+        <div class="remove"><i class="material-icons">clear</i></div>
+      </div>
+    </div>
+  </div>
+  <div class="inside">
+    <div class="icon"><i class="material-icons">info_outline</i></div>
+    <div class="contents">
+      <table>
+        <tr>
+          <th>{{ tagline }}</th>
+        </tr>
+        <tr>
+          <td>{{ desc }}</td>
+        </tr>
+        <tr>
+          <th>Food pairings</th>
+        </tr>
+        <tr>
+          <td><ul>
           <li v-for="item in food" :key="item">
             {{ item }}
           </li>
-        </ul>
-      </div>
+        </ul></td>
+        </tr>
+      </table>
+    </div>
   </div>
+</div>
+
 
 </template>
-
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>  
 <script>
+/* var $div = $('.contents');
+$div.on('mousewheel DOMMouseScroll', function(e) {
+    var d = e.originalEvent.wheelDelta || -e.originalEvent.detail,
+        dir = d > 0 ? 'up' : 'down',
+        stop = (dir == 'up' && this.scrollTop == 0) || (dir == 'down' && this.scrollTop == this.scrollHeight-this.offsetHeight);
+    stop && e.preventDefault();
+}); */
+
+
 export default {
   name: "BeerCard",
   props: {
@@ -34,8 +73,12 @@ export default {
     tips: String,
     food: Array,
 	},
+
+  
   
 };
+
+
 </script>
 
 <style>
@@ -43,91 +86,191 @@ export default {
 
 
 
-.beer-card {
-  position: relative;
-  min-height: 363.4px;
-  max-width: 790px;
-  padding: 3.2rem;
-  display: grid;
-  grid: auto/1fr 3fr;
-  grid-gap: 3.2rem;
-  grid-template-areas: "image content";
-  background-color: #fdfdfd;
-  border-radius: 0;
+.beer-image{
+  margin-top: 50px;;
 }
 
-.beer-image {
-  height: 363.4px;
-  width: auto;
-  grid-area: image;
+.wrapper {
+  width: 300px;
+  height: 500px;
+  background: white;
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+}
+.wrapper:hover {
+  transform: scale(1);
+  box-shadow: 5px 20px 30px rgba(0, 0, 0, 0.2);
+}
+.wrapper .container {
+  width: 100%;
+  height: 100%;
+}
+.wrapper .container .top {
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: 80%;
+  width: 100%;
+  background: no-repeat center center;
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  -o-background-size: 100%;
+  background-size: 100%;
 }
-.beer-image img {
-  max-height: 100%;
-  max-width: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+.wrapper .container .bottom {
+  width: 200%;
+  height: 20%;
+  transition: transform 0.5s;
 }
-
-.beer-name h3 {
-  margin: 0 auto 0.5rem auto;
-  transform: translate(-0.05em, 0);
-  font-family: "Old Standard TT", serif;
-  font-size: 2.4rem;
-  line-height: 1.07em;
-  letter-spacing: -0.015em;
+.wrapper .container .bottom.clicked {
+  transform: translateX(-50%);
 }
-
-.beer-tagline {
-  border-bottom: 2px solid .4ac;
+.wrapper .container .bottom h1 {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
 }
-.beer-tagline p {
-  margin-top: 0;
-  font-family: "Old Standard TT", serif;
-  font-style: italic;
+.wrapper .container .bottom p {
+  margin: 0;
+  padding: 0;
 }
-
-.content {
-  grid-area: content;
+.wrapper .container .bottom .left {
+  height: 100%;
+  width: 50%;
+  background: #f4f4f4;
+  position: relative;
+  float: left;
 }
-
-.beer-description p {
-  margin-bottom: 0;
-  font-size: 0.93rem;
-  line-height: 1.3em;
+.wrapper .container .bottom .left .details {
+  padding: 20px;
+  float: left;
+  width: calc(70% - 40px);
 }
-
-.beer-food-pairing p {
-  margin-bottom: 0;
-  font-style: italic;
-  font-size: 0.93rem;
-  line-height: 1.3em;
+.wrapper .container .bottom .left .buy {
+  float: right;
+  width: calc(30% - 2px);
+  height: 100%;
+  background: #f1f1f1;
+  transition: background 0.5s;
+  border-left: solid thin rgba(0, 0, 0, 0.1);
 }
-
-
-@media all and (-webkit-min-device-pixel-ratio: 1) {
-  .beer-name h3 {
-    letter-spacing: -0.025em;
-  }
+.wrapper .container .bottom .left .buy i {
+  font-size: 30px;
+  padding: 30px;
+  color: #254053;
+  transition: transform 0.5s;
 }
-@media all and (max-width: 790px) {
-
-
-  .beer-card {
-    min-height: 80vh;
-    max-width: 92vw;
-    margin: 1.6rem 0;
-    padding: 2.2624rem;
-    padding-bottom: 3.2rem;
-    grid: auto/auto;
-    grid-gap: 0;
-    grid-template-areas: "content";
-  }
-
-  .beer-image {
-    display: none;
-  }
+.wrapper .container .bottom .left .buy:hover {
+  background: #A6CDDE;
+}
+.wrapper .container .bottom .left .buy:hover i {
+  transform: translateY(5px);
+  color: #00394B;
+}
+.wrapper .container .bottom .right {
+  width: 50%;
+  background: #A6CDDE;
+  color: white;
+  float: right;
+  height: 200%;
+  overflow-y:scroll;
+}
+.wrapper .container .bottom .right .details {
+  padding: 20px;
+  float: right;
+  width: calc(70% - 40px);
+}
+.wrapper .container .bottom .right .done {
+  width: calc(30% - 2px);
+  float: left;
+  transition: transform 0.5s;
+  border-right: solid thin rgba(255, 255, 255, 0.3);
+  height: 50%;
+}
+.wrapper .container .bottom .right .done i {
+  font-size: 30px;
+  padding: 30px;
+  color: white;
+}
+.wrapper .container .bottom .right .remove {
+  width: calc(30% - 1px);
+  clear: both;
+  border-right: solid thin rgba(255, 255, 255, 0.3);
+  height: 50%;
+  background: #BC3B59;
+  transition: transform 0.5s, background 0.5s;
+}
+.wrapper .container .bottom .right .remove:hover {
+  background: #9B2847;
+}
+.wrapper .container .bottom .right .remove:hover i {
+  transform: translateY(5px);
+}
+.wrapper .container .bottom .right .remove i {
+  transition: transform 0.5s;
+  font-size: 30px;
+  padding: 30px;
+  color: white;
+}
+.wrapper .container .bottom .right:hover .remove, .wrapper .container .bottom .right:hover .done {
+  transform: translateY(-100%);
+}
+.wrapper .inside {
+  z-index: 9;
+  background: #95afca;
+  width: 140px;
+  height: 140px;
+  position: absolute;
+  top: -70px;
+  right: -70px;
+  border-radius: 0px 0px 200px 200px;
+  transition: all 0.5s, border-radius 2s, top 1s;
+  overflow: hidden;
+}
+.wrapper .inside .icon {
+  position: absolute;
+  right: 85px;
+  top: 85px;
+  color: white;
+  opacity: 1;
+}
+.wrapper .inside:hover {
+  width: 100%;
+  right: 0;
+  top: 0;
+  border-radius: 0;
+  height: 80%;
+}
+.wrapper .inside:hover .icon {
+  opacity: 0;
+  right: 15px;
+  top: 15px;
+}
+.wrapper .inside:hover .contents {
+  opacity: 1;
+  transform: scale(1);
+  transform: translateY(0);
+}
+.wrapper .inside .contents {
+  overflow:scroll;
+  padding: 5%;
+  opacity: 0;
+  transform: scale(0.5);
+  transform: translateY(-200%);
+  transition: opacity 0.2s, transform 0.8s;
+}
+.wrapper .inside .contents table {
+  text-align: left;
+  width: 100%;
+}
+.wrapper .inside .contents h1, .wrapper .inside .contents p, .wrapper .inside .contents table {
+  color: white;
+}
+.wrapper .inside .contents p {
+  font-size: 13px;
 }
 </style>
