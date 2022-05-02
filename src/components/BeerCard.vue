@@ -11,7 +11,9 @@
             <p>{{ abv }}%</p>
           </div>
           <div class="favorite">
-            <i @click="addToFavorite" class="material-icons">favorite_border</i>
+            <i @click="addToFavorite" class="material-icons no_fav"
+              >favorite_border</i
+            >
           </div>
         </div>
         <div class="right">
@@ -53,19 +55,8 @@
     </div>
   </div>
 </template>
-<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
-var $div = $(".contents");
-$div.on("mousewheel DOMMouseScroll", function (e) {
-  var d = e.originalEvent.wheelDelta || -e.originalEvent.detail,
-    dir = d > 0 ? "up" : "down",
-    stop =
-      (dir == "up" && this.scrollTop == 0) ||
-      (dir == "down" &&
-        this.scrollTop == this.scrollHeight - this.offsetHeight);
-  stop && e.preventDefault();
-});
-
+//ONLY KEEP CLEAR FOR DEV PURPOSES DO NOT FORGET TO REMOVE IT AFTER
 localStorage.clear();
 // get favorites from local storage or empty array
 var favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -90,15 +81,15 @@ export default {
     addToFavorite(e) {
       var id = this.name,
         index = favorites.indexOf(id);
-      // return if target doesn't have an id (shouldn't happen)
       if (!id) return;
       // item is not favorite
       if (index == -1) {
         favorites.push(id);
+        e.target.innerHTML = "favorite"
       } else {
         favorites.splice(index, 1);
+        e.target.innerHTML = "favorite_border"
       }
-      // store array in local storage
       localStorage.setItem("favorites", JSON.stringify(favorites));
       console.log(favorites);
     },
