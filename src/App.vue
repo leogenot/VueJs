@@ -10,11 +10,13 @@
           <option value="PlusABV">Sort from least alcohol</option>
           <option value="MinusABV">Sort from most alcohol</option>
         </select>
-        <favorite name="favorite"></favorite>
+        <h1>{{ beers.length }} Beers</h1>
+        <!-- <favorite name="favorite"></favorite> -->
       </div>
       <div v-if="!beers.length" class="loading">Loading...</div>
       <div class="beer">
         <BeerCard
+          class="beer_card"
           v-for="beer in beersOrganizationData"
           :key="beer.id"
           :name="beer.name"
@@ -27,12 +29,9 @@
         />
       </div>
     </section>
-    <PaginationComp
-      :totalPages="10"
-      :perPage="10"
-      :currentPage="currentPage"
-      @pagechanged="onPageChange"
-    />
+    <button @click="loadMore" v-if="currentPage * maxPerPage < beers.length">
+      load more
+    </button>
   </div>
 </template>
 <style>
@@ -48,14 +47,16 @@
 </style>
 <script>
 import BeerCard from "./components/BeerCard.vue";
-import PaginationComp from './components/PaginationComp.vue'
+//import PaginationComp from './components/PaginationComp.vue'
 //import Favorite from "./components/favorite.vue";
 import axios from "axios";
+
+
 export default {
   name: "BeerGallery",
   components: {
     BeerCard,
-    PaginationComp,
+    //PaginationComp,
     //Favorite,
   },
   data() {
@@ -65,24 +66,13 @@ export default {
       search: "",
       beersSortType: "AZName",
       currentPage: 1,
+      maxPerPage: 3,
+      showReadMore: true,
     };
   },
   watch: {
-    bottom(newValue) {
-      if (newValue) {
-        this.addBeer();
-      }
-    },
   },
   created() {
-    /* window.addEventListener("scroll", () => {
-      this.bottom = this.bottomVisible();
-    }); */
-    this.addBeer();
-    this.addBeer();
-    this.addBeer();
-    this.addBeer();
-    this.addBeer();
     this.addBeer();
   },
   computed: {
@@ -105,43 +95,66 @@ export default {
       if (reversed) data = data.reverse();
       return data;
     },
+    totalResults() {
+      return Object.keys(this.beers).length;
+    },
+    pageCount() {
+      return Math.ceil(this.totalResults / this.maxPerPage);
+    },
+    pageOffest() {
+      return this.maxPerPage * this.currentPage;
+    },
+    paginatedBeers() {
+      return this.beers.slice(0, this.currentPage * this.maxPerPage);
+    },
   },
   methods: {
-    /*     bottomVisible() {
-      const scrollY = window.scrollY;
-      const visible = document.documentElement.clientHeight;
-      const pageHeight = document.documentElement.scrollHeight;
-      const bottomOfPage = visible + scrollY >= pageHeight;
-      return bottomOfPage || pageHeight < visible;
-    }, */
+
+    loadMore() {
+      this.currentPage += 1;
+      this.addMoreBeer(this.currentPage);
+    },
     addBeer() {
-      axios.get("https://api.punkapi.com/v2/beers/random").then((response) => {
-        let api = response.data[0];
-        let apiInfo = {
-          name: api.name,
-          abv: api.abv,
-          desc: api.description,
-          img: api.image_url,
-          tips: api.brewers_tips,
-          tagline: api.tagline,
-          food: api.food_pairing,
-        };
-        this.beers.push(apiInfo);
-        /*         if (this.bottomVisible()) {
-          this.addBeer();
-        } */
-      });
+      axios
+        .get('https://api.punkapi.com/v2/beers?page=1&per_page=30')
+        .then((response) => {
+          for (let i = 0; i < 80; i++) {
+            let api = response.data[i];
+            let apiInfo = {
+              name: api.name,
+              abv: api.abv,
+              desc: api.description,
+              img: api.image_url,
+              tips: api.brewers_tips,
+              tagline: api.tagline,
+              food: api.food_pairing,
+            };
+            this.beers.push(apiInfo);
+          }
+
+        });
     },
-    onPageChange(page) {
-      console.log(page)
-      this.currentPage = page;
+    addMoreBeer(page) {
+      axios
+        .get('https://api.punkapi.com/v2/beers?page=' + page + '&per_page=30')
+        .then((response) => {
+          for (let i = 0; i < 80; i++) {
+            let api = response.data[i];
+            let apiInfo = {
+              name: api.name,
+              abv: api.abv,
+              desc: api.description,
+              img: api.image_url,
+              tips: api.brewers_tips,
+              tagline: api.tagline,
+              food: api.food_pairing,
+            };
+            this.beers.push(apiInfo);
+          }
+
+        });
     },
-    /*     favorite: function() {
-            if (this.disabled==true) {
-                return;
-            }
-            this.value = !this.value;
-        }, */
+    
   },
 };
 </script>

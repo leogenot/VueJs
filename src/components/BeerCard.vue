@@ -1,96 +1,119 @@
 <template>
-
-
-<div class="wrapper">
-  <div class="container">
-    <div class="beer-img top">
-        <img :src="img" height="300" class="beer-image"/>
+  <div class="wrapper">
+    <div class="container">
+      <div class="beer-img top">
+        <img :src="img" height="300" class="beer-image" />
       </div>
-    <div class="bottom">
-      <div class="left">
-        <div class="details">
-          <h1>{{ name }}</h1>
-          <p>{{ abv }}%</p>
+      <div class="bottom">
+        <div class="left">
+          <div class="details">
+            <h1>{{ name }}</h1>
+            <p>{{ abv }}%</p>
+          </div>
+          <div class="favorite">
+            <i @click="addToFavorite" class="material-icons">favorite_border</i>
+          </div>
         </div>
-        <div class="buy"><i onclick="myFunction(this)" class="material-icons">favorite_border</i></div>
+        <div class="right">
+          <div class="done"><i class="material-icons">done</i></div>
+          <div class="details">
+            <h1>{{ name }}</h1>
+            <p>Added to your favorites</p>
+          </div>
+          <div class="remove"><i class="material-icons">clear</i></div>
+        </div>
       </div>
-      <div class="right">
-        <div class="done"><i class="material-icons">done</i></div>
-        <div class="details">
-          <h1>{{ name }}</h1>
-          <p>Added to your favorites</p>
-        </div>
-        <div class="remove"><i class="material-icons">clear</i></div>
+    </div>
+    <div class="inside">
+      <div class="icon"><i class="material-icons">info_outline</i></div>
+      <div class="contents">
+        <table>
+          <tr>
+            <th>{{ tagline }}</th>
+          </tr>
+          <br />
+          <tr>
+            <td>{{ desc }}</td>
+          </tr>
+          <br />
+          <tr>
+            <th>Food pairings</th>
+          </tr>
+          <tr>
+            <td>
+              <ul>
+                <li v-for="item in food" :key="item">
+                  {{ item }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
-  <div class="inside">
-    <div class="icon"><i class="material-icons">info_outline</i></div>
-    <div class="contents">
-      <table>
-        <tr>
-          <th>{{ tagline }}</th>
-        </tr>
-        <br>
-        <tr>
-          <td>{{ desc }}</td>
-        </tr>
-        <br>
-        <tr>
-          <th>Food pairings</th>
-        </tr>
-        <tr>
-          <td><ul>
-          <li v-for="item in food" :key="item">
-            {{ item }}
-          </li>
-        </ul></td>
-        </tr>
-      </table>
-    </div>
-  </div>
-</div>
-
-
 </template>
-<script src="https://code.jquery.com/jquery-3.1.0.js"></script>  
+<script src="https://code.jquery.com/jquery-3.1.0.js"></script>
 <script>
-var $div = $('.contents');
-$div.on('mousewheel DOMMouseScroll', function(e) {
-    var d = e.originalEvent.wheelDelta || -e.originalEvent.detail,
-        dir = d > 0 ? 'up' : 'down',
-        stop = (dir == 'up' && this.scrollTop == 0) || (dir == 'down' && this.scrollTop == this.scrollHeight-this.offsetHeight);
-    stop && e.preventDefault();
-    console.log("hello")
+var $div = $(".contents");
+$div.on("mousewheel DOMMouseScroll", function (e) {
+  var d = e.originalEvent.wheelDelta || -e.originalEvent.detail,
+    dir = d > 0 ? "up" : "down",
+    stop =
+      (dir == "up" && this.scrollTop == 0) ||
+      (dir == "down" &&
+        this.scrollTop == this.scrollHeight - this.offsetHeight);
+  stop && e.preventDefault();
 });
 
+localStorage.clear();
+// get favorites from local storage or empty array
+var favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+// add class 'fav' to each favorite
+favorites.forEach(function (favorite) {
+  document.getElementById(favorite).className = "fav";
+});
 
 export default {
   name: "BeerCard",
   props: {
     img: String,
-		name: {type: String, required: true},
-		abv: Number, 
+    name: { type: String, required: true },
+    abv: Number,
     tagline: String,
     desc: String,
     tips: String,
     food: Array,
-	},
-
-  
-  
+  },
+  computed: {},
+  methods: {
+    addToFavorite(e) {
+      var id = this.name,
+        index = favorites.indexOf(id);
+      // return if target doesn't have an id (shouldn't happen)
+      if (!id) return;
+      // item is not favorite
+      if (index == -1) {
+        favorites.push(id);
+      } else {
+        favorites.splice(index, 1);
+      }
+      // store array in local storage
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      console.log(favorites);
+    },
+  },
 };
-
-
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Old+Standard+TT:400i,700|Open+Sans:400,400i");
 
-
-
-.beer-image{
-  margin-top: 50px;;
+.details {
+  overflow-y: scroll;
+}
+.beer-image {
+  margin-top: 50px;
 }
 
 .wrapper {
@@ -153,7 +176,7 @@ export default {
   float: left;
   width: calc(70% - 40px);
 }
-.wrapper .container .bottom .left .buy {
+.wrapper .container .bottom .left .favorite {
   float: right;
   width: calc(30% - 2px);
   height: 100%;
@@ -161,26 +184,29 @@ export default {
   transition: background 0.5s;
   border-left: solid thin rgba(0, 0, 0, 0.1);
 }
-.wrapper .container .bottom .left .buy i {
+.wrapper .container .bottom .left .favorite i {
   font-size: 30px;
   padding: 30px;
   color: #254053;
   transition: transform 0.5s;
 }
-.wrapper .container .bottom .left .buy:hover {
-  background: #A6CDDE;
+.favorite {
+  cursor: pointer;
 }
-.wrapper .container .bottom .left .buy:hover i {
+.wrapper .container .bottom .left .favorite:hover {
+  background: #a6cdde;
+}
+.wrapper .container .bottom .left .favorite:hover i {
   transform: translateY(5px);
-  color: #00394B;
+  color: #00394b;
 }
 .wrapper .container .bottom .right {
   width: 50%;
-  background: #A6CDDE;
+  background: #a6cdde;
   color: white;
   float: right;
   height: 200%;
-  overflow-y:scroll;
+  overflow-y: scroll;
 }
 .wrapper .container .bottom .right .details {
   padding: 20px;
@@ -204,11 +230,11 @@ export default {
   clear: both;
   border-right: solid thin rgba(255, 255, 255, 0.3);
   height: 50%;
-  background: #BC3B59;
+  background: #bc3b59;
   transition: transform 0.5s, background 0.5s;
 }
 .wrapper .container .bottom .right .remove:hover {
-  background: #9B2847;
+  background: #9b2847;
 }
 .wrapper .container .bottom .right .remove:hover i {
   transform: translateY(5px);
@@ -219,7 +245,8 @@ export default {
   padding: 30px;
   color: white;
 }
-.wrapper .container .bottom .right:hover .remove, .wrapper .container .bottom .right:hover .done {
+.wrapper .container .bottom .right:hover .remove,
+.wrapper .container .bottom .right:hover .done {
   transform: translateY(-100%);
 }
 .wrapper .inside {
@@ -259,7 +286,7 @@ export default {
   transform: translateY(0);
 }
 .wrapper .inside .contents {
-  overflow:scroll;
+  overflow: scroll;
   padding: 5%;
   opacity: 0;
   transform: scale(0.5);
@@ -270,7 +297,9 @@ export default {
   text-align: left;
   width: 100%;
 }
-.wrapper .inside .contents h1, .wrapper .inside .contents p, .wrapper .inside .contents table {
+.wrapper .inside .contents h1,
+.wrapper .inside .contents p,
+.wrapper .inside .contents table {
   color: white;
 }
 .wrapper .inside .contents p {
