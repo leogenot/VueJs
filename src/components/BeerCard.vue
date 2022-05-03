@@ -100,6 +100,52 @@ export default {
 <style>
 @import url("https://fonts.googleapis.com/css?family=Old+Standard+TT:400i,700|Open+Sans:400,400i");
 
+
+:root {
+  --app-container: #f3f6fd;
+  --main-color: #1f1c2e;
+  --secondary-color: #4a4a4a;
+  --link-color: #1f1c2e;
+  --link-color-hover: #c3cff4;
+  --link-color-active: #fff;
+  --link-color-active-bg: #1f1c2e;
+  --projects-section: #fff;
+  --message-box-hover: #fafcff;
+  --message-box-border: #e9ebf0;
+  --more-list-bg: #fff;
+  --more-list-bg-hover: #f6fbff;
+  --more-list-shadow: rgba(209, 209, 209, 0.4);
+  --button-bg: #1f1c24;
+  --search-area-bg: #fff;
+  --star: #1ff1c2e;
+  --message-btn: #fff;
+  --main-color-card: #dbf6fd;
+}
+
+.dark:root {
+  --app-container: #1f1d2b;
+  --app-container: #111827;
+  --main-color: #fff;
+  --secondary-color: rgba(255, 255, 255, 0.8);
+  --projects-section: #1f2937;
+  --link-color: rgba(255, 255, 255, 0.8);
+  --link-color-hover: rgba(195, 207, 244, 0.1);
+  --link-color-active-bg: rgba(195, 207, 244, 0.2);
+  --button-bg: #1f2937;
+  --search-area-bg: #1f2937;
+  --message-box-hover: #243244;
+  --message-box-border: rgba(255, 255, 255, 0.1);
+  --star: #ffd92c;
+  --light-font: rgba(255, 255, 255, 0.8);
+  --more-list-bg: #2f3142;
+  --more-list-bg-hover: rgba(195, 207, 244, 0.1);
+  --more-list-shadow: rgba(195, 207, 244, 0.1);
+  --message-btn: rgba(195, 207, 244, 0.1);
+  --main-color-card: #95afca;
+}
+
+
+
 .details {
   overflow-y: scroll;
 }
@@ -158,9 +204,10 @@ export default {
 .wrapper .container .bottom .left {
   height: 100%;
   width: 50%;
-  background: #f4f4f4;
+  background: var(--app-container);
   position: relative;
   float: left;
+  color: var(--main-color);
 }
 .wrapper .container .bottom .left .details {
   padding: 20px;
@@ -171,29 +218,29 @@ export default {
   float: right;
   width: calc(30% - 2px);
   height: 100%;
-  background: #f1f1f1;
+  background: var(--app-container);
   transition: background 0.5s;
   border-left: solid thin rgba(0, 0, 0, 0.1);
 }
 .wrapper .container .bottom .left .favorite i {
   font-size: 30px;
   padding: 30px;
-  color: #254053;
+  color: var(--main-color);
   transition: transform 0.5s;
 }
 .favorite {
   cursor: pointer;
 }
 .wrapper .container .bottom .left .favorite:hover {
-  background: #a6cdde;
+  background: var(--app-container);
 }
 .wrapper .container .bottom .left .favorite:hover i {
   transform: translateY(5px);
-  color: #00394b;
+  color: var(--main-color);
 }
 .wrapper .container .bottom .right {
   width: 50%;
-  background: #a6cdde;
+  background: var(--app-container);
   color: white;
   float: right;
   height: 200%;
@@ -242,7 +289,7 @@ export default {
 }
 .wrapper .inside {
   z-index: 9;
-  background: #95afca;
+  background: var(--app-container);
   width: 140px;
   height: 140px;
   position: absolute;
@@ -256,7 +303,7 @@ export default {
   position: absolute;
   right: 85px;
   top: 85px;
-  color: white;
+  color: var(--main-color);
   opacity: 1;
 }
 .wrapper .inside:hover {
@@ -291,7 +338,7 @@ export default {
 .wrapper .inside .contents h1,
 .wrapper .inside .contents p,
 .wrapper .inside .contents table {
-  color: white;
+  color: var(--main-color);
 }
 .wrapper .inside .contents p {
   font-size: 13px;
