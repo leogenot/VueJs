@@ -3,30 +3,7 @@
     <div class="app-header">
       <div class="app-header-left">
         <p class="app-name">Punk API</p>
-        <div class="search-wrapper">
-          <input
-            class="search-input"
-            type="text"
-            v-model="search"
-            placeholder="Search for a beer"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            class="feather feather-search"
-            viewBox="0 0 24 24"
-          >
-            <defs></defs>
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="M21 21l-4.35-4.35"></path>
-          </svg>
-        </div>
+        <SearchBar :value="search" @input="search = $event" />
       </div>
       <div class="app-header-right">
         <button
@@ -49,7 +26,7 @@
             <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
           </svg>
         </button>
-        <button class="favorite-btn">
+        <button class="action-button active" @click="openlistFavoriteBeers">
           <svg
             viewBox="0 0 24 24"
             width="24"
@@ -127,6 +104,55 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="app-right">
+      <button class="checkout-button"> <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            stroke="currentColor"
+            stroke-width="1.5"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="css-i6dzq1"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+            ></path>
+          </svg>&nbsp; Your favorite beers</button>
+      <button class="app-right-hide" @click="closelistFavoriteBeers">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="feather feather-x"
+          viewBox="0 0 24 24"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="app-right-content">
+        <div class="beer">
+            <BeerCard
+              class="beer_card"
+              v-for="beer in beersOrganizationData"
+              :key="beer.id"
+              :name="beer.name"
+              :img="beer.img"
+              :abv="beer.abv"
+              :tagline="beer.tagline"
+              :desc="beer.desc"
+              :tips="beer.tips"
+              :food="beer.food"
+            />
+          </div>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -426,17 +452,514 @@ button {
     font-size: 14px;
   }
 }
+
+.app-right {
+  background-color: var(--projects-section);
+  flex-basis: 400px;
+  height: 100%;
+  width:100%;
+  display: flex;
+  flex-direction: column;
+}
+.app-right-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 40px 32px 0px 32px;
+}
+.app-right-content {
+  overflow-y: auto;
+  padding: 32px;
+}
+
+.action-button {
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  padding: 0;
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--main-color);
+  color: var(--main-color);
+  flex-shrink: 0;
+  transition: 0.2s linear;
+  cursor: pointer;
+  display: none;
+}
+.action-button.active {
+  background-color: var(--main-active);
+}
+.action-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.product-list {
+  list-style-type: none;
+  padding: 0;
+}
+.product-list-item {
+  margin-bottom: 16px;
+  background-color: var(--product-list-item-bg);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-height: 100px;
+  overflow: hidden;
+  -webkit-animation: listItems 0.6s 0.2s both;
+  animation: listItems 0.6s 0.2s both;
+  transition: 0.2s linear;
+  cursor: pointer;
+}
+.product-list-item:hover {
+  background-color: #141d2b;
+}
+.product-list-itemContent {
+  padding: 16px;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+@-webkit-keyframes listItems {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes listItems {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.product-img-wrapper {
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-basis: 120px;
+  border-radius: 12px;
+  height: 100%;
+}
+.product-img-wrapper:hover .product-image {
+  transform: scale(1.1);
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  -o-object-fit: cover;
+  object-fit: cover;
+  transition: 0.2s linear;
+}
+
+.product-amount {
+  font-size: 14px;
+  line-height: 24px;
+  color: #fff;
+}
+.product-amount-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.product-amount-button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  color: #fff;
+  height: 16px;
+  cursor: pointer;
+  transition: 0.2s linear;
+}
+.product-amount-button:hover {
+  color: var(--main-color-2);
+}
+.product-amount-button svg {
+  width: 16px;
+  height: auto;
+}
+
+.product-info-header {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.product-info-subheader {
+  font-size: 14px;
+  line-height: 16px;
+  color: #fff;
+}
+.product-info-subheader span {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.checkout-button {
+  margin-top: auto;
+  border: none;
+  padding: 16px 8px;
+  color: var(--main-color);
+  background-color: var(--app-container);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transition: 0.2s linear;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 16px;
+}
+.checkout-button:before {
+  content: "";
+  display: inline-block;
+  vertical-align: sub;
+  width: 16px;
+  height: 16px;
+
+  margin-right: 4px;
+}
+
+.product-details {
+  border-radius: 16px;
+  padding-top: 16px;
+  background-color: var(--product-list-item-bg);
+  margin-bottom: 24px;
+  -webkit-animation: listItems 0.6s 0.2s both;
+  animation: listItems 0.6s 0.2s both;
+}
+.product-details-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.product-details-text {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  line-height: 16px;
+}
+.product-details-text.amount {
+  margin-left: auto;
+}
+.product-details-link {
+  color: #fff;
+  opacity: 0.6;
+  font-size: 12px;
+  line-height: 16px;
+  margin-left: 8px;
+  transition: 0.2s linear;
+}
+.product-details-link:hover {
+  opacity: 1;
+}
+.product-details-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+.product-details-summary .product-details-text {
+  font-size: 20px;
+}
+
+.app-right-hide {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  color: var(--main-color);
+  display: none;
+}
+
+@media screen and (max-width: 1200px) {
+  .app-content-field {
+    flex-direction: column;
+    min-height: unset;
+    max-height: unset;
+  }
+
+  .product-box.medium {
+    min-height: 120px;
+    margin-bottom: 24px;
+  }
+
+  .product-box-wrapper.three .product-box:first-child,
+  .product-box-wrapper.two .product-box:first-child {
+    margin-left: 0;
+  }
+}
+@media screen and (max-width: 1920px) {
+  .app-container {
+    position: relative;
+  }
+
+  .product-box.medium {
+    height: 150px;
+  }
+
+  .product-box-wrapper.three {
+    height: 150px;
+  }
+
+  .product-boxes {
+    flex: inherit;
+  }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 16px 0;
+  }
+
+  .app-left-content-header,
+  .app-content-field {
+    padding: 0 16px;
+  }
+
+  div.app-left {
+    padding: 0;
+  }
+
+  .app-right-hide {
+    display: block;
+  }
+
+  .action-button {
+    display: flex;
+  }
+
+  .app-filter-wrapper {
+    margin-left: 0;
+  }
+
+  .app-content-field.second .product-box-wrapper {
+    padding-top: 0;
+  }
+
+  .app-right {
+    display: none;
+    position: absolute;
+    height: 0;
+    transition: 0.2s linear;
+    opacity: 0;
+    z-index: 2;
+    right: -100%;
+    height: 100%;
+  }
+  .app-right.isOpen {
+    display: flex;
+    height: 100%;
+    right: 0px;
+    opacity: 1;
+  }
+
+  .app-left {
+    padding: 16px;
+  }
+
+  .product-box-wrapper.two {
+    flex: unset;
+    margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: 880px) {
+  .app-container {
+    position: relative;
+  }
+
+  .product-box.medium {
+    height: 150px;
+  }
+
+  .product-box-wrapper.three {
+    height: 150px;
+  }
+
+  .product-boxes {
+    flex: inherit;
+  }
+
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 16px 0;
+  }
+
+  .app-left-content-header,
+  .app-content-field {
+    padding: 0 16px;
+  }
+
+  div.app-left {
+    padding: 0;
+  }
+
+  .action-button {
+    display: flex;
+  }
+
+  .app-filter-wrapper {
+    margin-left: 0;
+  }
+
+  .app-content-field.second .product-box-wrapper {
+    padding-top: 0;
+  }
+
+  .app-left {
+    padding: 16px;
+  }
+
+  .product-box-wrapper.two {
+    flex: unset;
+    margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .product-img-wrapper {
+    flex-basis: 80px;
+  }
+
+  .product-box-wrapper.two {
+    margin-bottom: 0;
+  }
+
+  .app-right-content {
+    padding: 32px 16px;
+  }
+
+  .product-box-wrapper {
+    flex-direction: column;
+  }
+
+  .product-box-wrapper.three .product-box {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .product-box.medium {
+    height: 120px;
+    flex: unset;
+  }
+
+  .product-box-wrapper.three {
+    height: unset;
+  }
+
+  .product-boxes {
+    flex: unset;
+  }
+
+  .product-box-wrapper.two .product-box {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .product-box-wrapper.two {
+    flex: unset;
+    max-height: unset;
+  }
+
+  .product-box-wrapper.three {
+    flex: unset;
+    height: unset;
+  }
+
+  .app-content-field.second {
+    height: unset;
+    flex-shrink: 0;
+    padding-top: 24px;
+  }
+
+  .app-content-field {
+    flex-shrink: 0;
+  }
+
+  .app-left-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-content-field {
+    height: auto;
+  }
+
+  .content-title {
+    font-size: 24px;
+  }
+
+  .app-filter-wrapper {
+    max-width: 220px;
+  }
+
+  .app-left {
+    padding: 8px;
+  }
+
+  .filter-dropdown-button {
+    max-width: 90px;
+  }
+
+  .filter-search-input {
+    max-width: calc(100% - 90px);
+  }
+
+
+  .product-box-wrapper.two .product-box:first-child {
+    margin-top: 0;
+  }
+
+}
 </style>
 <script>
+const listItems = document.querySelectorAll(".fadeIn");
+const productBoxes = document.querySelectorAll(".product-box");
+
+listItems.forEach(function (listItem, index) {
+  listItem.setAttribute("style", `animation-delay: ${index * 0.2}s`);
+});
+
+productBoxes.forEach(function (productBox, index) {
+  productBox.setAttribute("style", `animation-delay: ${index * 0.1}s`);
+});
+
 import BeerCard from "./components/BeerCard.vue";
-//import Favorite from "./components/favorite.vue";
+import SearchBar from "./components/SearchBar.vue";
 import axios from "axios";
 
 export default {
   name: "BeerGallery",
   components: {
     BeerCard,
-    //Favorite,
+    SearchBar,
   },
   data() {
     return {
@@ -534,6 +1057,15 @@ export default {
 
       document.documentElement.classList.toggle("dark");
       modeSwitch.classList.toggle("active");
+    },
+    openlistFavoriteBeers() {
+          document.querySelector(".app-right").classList.add("isOpen");
+    
+    },
+    closelistFavoriteBeers() {
+
+          document.querySelector(".app-right").classList.remove("isOpen");
+
     },
   },
 };
