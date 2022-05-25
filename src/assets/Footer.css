@@ -1,0 +1,12 @@
+@import url("root.css");
+.footer {
+    position: absolute;
+    font-family: "DM Sans", sans-serif;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: var(--app-container);
+    text-align: center;
+    color: var(--main-color)
+  }

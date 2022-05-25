@@ -3,15 +3,10 @@
     <div class="app-header">
       <div class="app-header-left">
         <p class="app-name">Punk API</p>
-        <!-- <SearchBar :value="search" @input="search = $event" /> -->
         <SearchBar :search.sync="search" :beersSortType.sync="beersSortType" />
       </div>
       <div class="app-header-right">
-        <button
-          class="mode-switch"
-          title="Switch Theme"
-          @click="darkmodeToggle"
-        >
+        <button class="mode-switch" title="Switch Theme" @click="darkmodeToggle">
           <svg
             class="moon"
             fill="none"
@@ -53,16 +48,6 @@
 
           <div class="projects-section-line">
             <div class="view-actions">
-              <!-- 
-              <div class="select-dropdown">
-                <select v-model="beersSortType" id="beer-sort">
-                  <option value="AZName">Sort from A to Z</option>
-                  <option value="ZAName">Sort from Z to A</option>
-                  <option value="PlusABV">Sort from least alcohol</option>
-                  <option value="MinusABV">Sort from most alcohol</option>
-                </select>
-              </div> -->
-
               <button
                 class="view-btn grid-view active"
                 title="Grid View"
@@ -102,6 +87,9 @@
               :desc="beer.desc"
               :tips="beer.tips"
               :food="beer.food"
+              :beersArray="beers"
+              :favoritesArray_prop.sync="favoritesArray"
+              
             />
           </div>
         </div>
@@ -144,7 +132,7 @@
         <div class="beer">
           <BeerCard
             class="beer_card"
-            v-for="beer in beersOrganizationData"
+            v-for="beer in favoritesArray"
             :key="beer.id"
             :name="beer.name"
             :img="beer.img"
@@ -157,6 +145,7 @@
         </div>
       </div>
     </div>
+    <FooterBar class="footer" text="@ Léo Genot" />
   </div>
 </template>
 <style>
@@ -176,6 +165,7 @@ productBoxes.forEach(function (productBox, index) {
 
 import BeerCard from "./components/BeerCard.vue";
 import SearchBar from "./components/SearchBar.vue";
+import FooterBar from "./components/FooterBar.vue";
 import axios from "axios";
 
 export default {
@@ -183,11 +173,14 @@ export default {
   components: {
     BeerCard,
     SearchBar,
+    FooterBar,
   },
   data() {
     return {
       bottom: false,
       beers: [],
+      favoritesArray: [],
+      favoriteBeers: JSON.parse(localStorage.getItem("favorites")) || [],
       search: localStorage.getItem("search") || "",
       beersSortType: localStorage.getItem("beersSortType") || "AZName",
       currentPage: 1,
@@ -197,7 +190,9 @@ export default {
   },
   created() {
     this.addBeer();
+    
   },
+
   computed: {
     beersOrganizationData() {
       const field = ["AZName", "ZAName"].includes(this.beersSortType)
@@ -218,29 +213,21 @@ export default {
       if (reversed) data = data.reverse();
       return data;
     },
-    totalResults() {
-      return Object.keys(this.beers).length;
-    },
-    pageCount() {
-      return Math.ceil(this.totalResults / this.maxPerPage);
-    },
-    pageOffest() {
-      return this.maxPerPage * this.currentPage;
-    },
-    paginatedBeers() {
-      return this.beers.slice(0, this.currentPage * this.maxPerPage);
-    },
   },
   methods: {
+
+
     loadMore() {
       this.currentPage += 1;
       this.addMoreBeer(this.currentPage);
     },
     addBeer() {
+      //ONLY KEEP CLEAR FOR DEV PURPOSES DO NOT FORGET TO REMOVE IT AFTER
+      localStorage.clear();
       axios
         .get("https://api.punkapi.com/v2/beers?page=1&per_page=30")
         .then((response) => {
-          for (let i = 0; i < 80; i++) {
+          for (let i = 0; i < 30; i++) {
             let api = response.data[i];
             let apiInfo = {
               name: api.name,
@@ -259,7 +246,7 @@ export default {
       axios
         .get("https://api.punkapi.com/v2/beers?page=" + page + "&per_page=30")
         .then((response) => {
-          for (let i = 0; i < 80; i++) {
+          for (let i = 0; i < 30; i++) {
             let api = response.data[i];
             let apiInfo = {
               name: api.name,
@@ -279,6 +266,8 @@ export default {
 
       document.documentElement.classList.toggle("dark");
       modeSwitch.classList.toggle("active");
+
+      console.log(this.favoritesArray)
     },
     openlistFavoriteBeers() {
       document.querySelector(".app-right").classList.add("isOpen");
@@ -286,6 +275,8 @@ export default {
     closelistFavoriteBeers() {
       document.querySelector(".app-right").classList.remove("isOpen");
     },
+
+
   },
 };
 </script>
