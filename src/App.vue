@@ -141,6 +141,8 @@
             :desc="beer.desc"
             :tips="beer.tips"
             :food="beer.food"
+            :beersArray="beers"
+            :favoritesArray_prop.sync="favoritesArray"
           />
         </div>
       </div>
