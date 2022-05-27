@@ -181,7 +181,7 @@ export default {
     return {
       bottom: false,
       beers: [],
-      favoritesArray: [],
+      favoritesArray: JSON.parse(localStorage.getItem("favorites")) || [],
       favoriteBeers: JSON.parse(localStorage.getItem("favorites")) || [],
       search: localStorage.getItem("search") || "",
       beersSortType: localStorage.getItem("beersSortType") || "AZName",
